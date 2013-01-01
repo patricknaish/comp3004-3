@@ -8,7 +8,7 @@
 class Model {
 	public:
 		Model(std::string sourceFile);
-		int load();
+		void load();
 		void rotate();
 		void translate();
 		void scale();

@@ -13,10 +13,6 @@
 using namespace std; 
 using namespace glm;
 
-typedef struct {
-	Vertex v[4];
-} Face;
-
 GLuint vao[4], vbo[4];
 GLchar *vertexsource, *fragmentsource;
 GLuint vertexshader, fragmentshader;
