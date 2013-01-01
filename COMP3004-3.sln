@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "COMP3004-3", "COMP3004-3.vcxproj", "{575AFE87-F03A-4944-9386-B3F24F64D3FB}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "COMP3004-3", "COMP3004-3\COMP3004-3.vcxproj", "{575AFE87-F03A-4944-9386-B3F24F64D3FB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
