@@ -1,5 +1,4 @@
 #pragma once
-#include "Vertex.h"
 #include <vector>
 
 class Face
