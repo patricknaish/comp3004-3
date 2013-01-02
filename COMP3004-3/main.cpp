@@ -86,6 +86,12 @@ class Scene {
 			landscape.load();
 			landscape.loadTexture("textures/mars.tga");
 
+			Model skybox("models/plane.obj");
+			skybox.load();
+			skybox.loadTexture("textures/sky512.tga");
+
+			GLuint SamplerID = glGetUniformLocation(wireframeShaderProgram, "textureSampler");
+
 			GLuint MatrixID = glGetUniformLocation(wireframeShaderProgram, "MVP");
 
 			vec4 LightV = vec4(0.f, 0.f, 3.f, 1.f);
@@ -121,11 +127,17 @@ class Scene {
 				if (rotatingDown) {
 					camera.decreaseElevation(rate);
 				}
-				mat4 MVP = camera.getMVP(landscape.getMatrix());
-				glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &MVP[0][0]);
-		
+				landscape.rotate(rate, vec3(0,1,0));
+				skybox.rotate(rate, vec3(0,1,0));
 				glClearColor(0,0,0,0);
 				glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+				mat4 MVP = camera.getMVP(skybox.getMatrix());
+				glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &MVP[0][0]);
+				skybox.render();
+
+				MVP = camera.getMVP(landscape.getMatrix());
+				glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &MVP[0][0]);
 				landscape.render();
 				glFlush();
 				glfwSwapBuffers();

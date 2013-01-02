@@ -188,6 +188,7 @@ void Model::load(void) {
 }
 
 GLuint Model::loadTexture(string texPath) {
+	glEnable(GL_TEXTURE_2D);
 	glGenTextures(1, &textureID);
 	glBindTexture(GL_TEXTURE_2D, textureID);
 	glfwLoadTexture2D(texPath.c_str(), 0);
@@ -196,6 +197,7 @@ GLuint Model::loadTexture(string texPath) {
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
     glGenerateMipmap(GL_TEXTURE_2D);
+	glBindTexture(GL_TEXTURE_2D, 0);
 	return textureID;
 }
 
@@ -217,6 +219,7 @@ void Model::render(void) {
 	glBindVertexArray(vao[0]);
 	glBindBuffer(GL_ARRAY_BUFFER, vbo[0]);
 	glDrawArrays(GL_QUADS, 0, vertices.size());
+	glBindTexture(GL_TEXTURE_2D, 0);
 }
 
 mat4 Model::getMatrix(void) {
