@@ -16,7 +16,7 @@ using namespace glm;
 
 GLchar *vertexsource, *fragmentsource;
 GLuint vertexshader, fragmentshader;
-GLuint wireframeShaderProgram;
+GLuint objectShaderProgram, skyboxShaderProgram;
 
 Camera camera = Camera();
 
@@ -80,7 +80,6 @@ class Scene {
 	public:
 		Scene() {}
 		void run() {
-			glUseProgram(wireframeShaderProgram);
 
 			Model landscape("models/landscape.obj");
 			landscape.load();
@@ -90,20 +89,22 @@ class Scene {
 			skybox.load();
 			skybox.loadTexture("textures/sky512.tga");
 
-			GLuint SamplerID = glGetUniformLocation(wireframeShaderProgram, "textureSampler");
+			glUseProgram(skyboxShaderProgram);
+			GLuint SkyboxMatrixID = glGetUniformLocation(skyboxShaderProgram, "MVP");
 
-			GLuint MatrixID = glGetUniformLocation(wireframeShaderProgram, "MVP");
+			glUseProgram(objectShaderProgram);
+			GLuint ObjectMatrixID = glGetUniformLocation(objectShaderProgram, "MVP");
 
-			vec4 LightV = vec4(0.4f, 0.4f, 0.4f, 1.f);
-			GLuint LightVID = glGetUniformLocation(wireframeShaderProgram, "LightV");
+			vec4 LightV = vec4(0.f, 0.f, .8f, 1.f);
+			GLuint LightVID = glGetUniformLocation(objectShaderProgram, "LightV");
 			glUniform4fv(LightVID, 1, &LightV[0]);
 				
-			vec4 LightC = vec4(1.f, 1.f, 1.f, 1.f);
-			GLuint LightCID = glGetUniformLocation(wireframeShaderProgram, "LightC");
+			vec4 LightC = vec4(1.f, .5f, .5f, 1.f);
+			GLuint LightCID = glGetUniformLocation(objectShaderProgram, "LightC");
 			glUniform4fv(LightCID, 1, &LightC[0]);
 				
 			vec4 Material = vec4(1.f, 0.f, 0.f, 1.f);
-			GLuint MaterialID = glGetUniformLocation(wireframeShaderProgram, "Material");
+			GLuint MaterialID = glGetUniformLocation(objectShaderProgram, "Material");
 			glUniform4fv(MaterialID, 1, &Material[0]);
 
 			//Running stuff
@@ -132,12 +133,14 @@ class Scene {
 				glClearColor(0,0,0,0);
 				glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+				glUseProgram(skyboxShaderProgram);
 				mat4 MVP = camera.getMVP(skybox.getMatrix());
-				glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &MVP[0][0]);
+				glUniformMatrix4fv(SkyboxMatrixID, 1, GL_FALSE, &MVP[0][0]);
 				skybox.render();
 
+				glUseProgram(objectShaderProgram);
 				MVP = camera.getMVP(landscape.getMatrix());
-				glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &MVP[0][0]);
+				glUniformMatrix4fv(ObjectMatrixID, 1, GL_FALSE, &MVP[0][0]);
 				landscape.render();
 
 				glFlush();
@@ -223,7 +226,8 @@ int main(void) {
 	glEnable(GL_DEPTH_TEST);
 	glDepthFunc(GL_LESS);
 
-	wireframeShaderProgram = setupShaders("wireshader.vert", "wireshader.frag");
+	objectShaderProgram = setupShaders("objshader.vert", "objshader.frag");
+	skyboxShaderProgram = setupShaders("objshader.vert", "skyshader.frag");
 
 	Scene scene;
 	scene.run();

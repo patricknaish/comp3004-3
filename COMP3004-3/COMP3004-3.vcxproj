@@ -71,11 +71,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="models\landscape.mtl" />
-    <None Include="textures\Mars.jpg" />
-    <None Include="textures\sky.tga" />
+    <None Include="skyshader.frag" />
+    <None Include="textures\mars.tga" />
+    <None Include="textures\sky512.tga" />
     <None Include="textures\skyrender.png" />
-    <None Include="wireshader.frag" />
-    <None Include="wireshader.vert" />
+    <None Include="objshader.frag" />
+    <None Include="objshader.vert" />
   </ItemGroup>
   <ItemGroup>
     <Object Include="models\landscape.obj">

@@ -34,24 +34,21 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="textures\Mars.jpg">
-      <Filter>Resource Files</Filter>
-    </None>
     <None Include="textures\skyrender.png">
       <Filter>Resource Files</Filter>
     </None>
     <None Include="models\landscape.mtl">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="wireshader.frag">
+    <None Include="objshader.frag">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="wireshader.vert">
+    <None Include="objshader.vert">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="textures\sky.tga">
-      <Filter>Resource Files</Filter>
-    </None>
+    <None Include="textures\sky512.tga" />
+    <None Include="textures\mars.tga" />
+    <None Include="skyshader.frag" />
   </ItemGroup>
   <ItemGroup>
     <Object Include="models\landscape.obj">
