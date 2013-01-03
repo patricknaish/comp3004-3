@@ -16,7 +16,7 @@ using namespace glm;
 
 GLchar *vertexsource, *fragmentsource;
 GLuint vertexshader, fragmentshader;
-GLuint wireframeShaderProgram, normalShaderProgram;
+GLuint wireframeShaderProgram;
 
 Camera camera = Camera();
 
@@ -94,16 +94,16 @@ class Scene {
 
 			GLuint MatrixID = glGetUniformLocation(wireframeShaderProgram, "MVP");
 
-			vec4 LightV = vec4(0.f, 0.f, 3.f, 1.f);
-			GLuint LightVID = glGetUniformLocation(normalShaderProgram, "LightV");
+			vec4 LightV = vec4(0.4f, 0.4f, 0.4f, 1.f);
+			GLuint LightVID = glGetUniformLocation(wireframeShaderProgram, "LightV");
 			glUniform4fv(LightVID, 1, &LightV[0]);
 				
-			vec4 LightC = vec4(0.7f, 0.7f, 0.7f, 1.f);
-			GLuint LightCID = glGetUniformLocation(normalShaderProgram, "LightC");
+			vec4 LightC = vec4(1.f, 1.f, 1.f, 1.f);
+			GLuint LightCID = glGetUniformLocation(wireframeShaderProgram, "LightC");
 			glUniform4fv(LightCID, 1, &LightC[0]);
 				
 			vec4 Material = vec4(1.f, 0.f, 0.f, 1.f);
-			GLuint MaterialID = glGetUniformLocation(normalShaderProgram, "Material");
+			GLuint MaterialID = glGetUniformLocation(wireframeShaderProgram, "Material");
 			glUniform4fv(MaterialID, 1, &Material[0]);
 
 			//Running stuff
@@ -215,7 +215,7 @@ int main(void) {
 	if (glewIsSupported("GL_VERSION_3_2"))
 		printf("Ready for OpenGL 3.2\n\n");
 	else {
-		printf("OpenGL 4.2 not supported\n\n");
+		printf("OpenGL 3.2 not supported\n\n");
 		exit(EXIT_FAILURE);
 	}
 
@@ -224,7 +224,6 @@ int main(void) {
 	glDepthFunc(GL_LESS);
 
 	wireframeShaderProgram = setupShaders("wireshader.vert", "wireshader.frag");
-	//normalShaderProgram = setupShaders("normshader.vert", "normshader.frag");
 
 	Scene scene;
 	scene.run();

@@ -1,7 +1,7 @@
 #version 330 core
-in vec3 in_position;
-in vec2 in_uv;
-in vec3 in_normal;
+layout(location=0) in vec3 in_position;
+layout(location=1) in vec2 in_uv;
+layout(location=2) in vec3 in_normal;
 out vec2 ex_uv;
 out vec4 ex_normal;
 
