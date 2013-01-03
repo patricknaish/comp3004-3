@@ -1,26 +1,7 @@
 #include "Model.h"
-#include <iostream>
-#include <fstream>
-#include <vector>
-#include <sstream>
 
 using namespace std;
 using namespace glm;
-
-GLuint vao[1];
-GLuint vbo[3];
-
-GLuint textureID;
-
-string path;
-string mtllib;
-string name;
-
-vector<vec3> vertices;
-vector<vec2> textures;
-vector<vec3> normals;
-
-mat4 model;
 
 Model::Model(string sourceFile) {
 	path = sourceFile;
@@ -189,16 +170,16 @@ void Model::load(void) {
 
 GLuint Model::loadTexture(string texPath) {
 	glEnable(GL_TEXTURE_2D);
-	glGenTextures(1, &textureID);
-	glBindTexture(GL_TEXTURE_2D, textureID);
+	glGenTextures(1, textureID);
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, textureID[0]);
 	glfwLoadTexture2D(texPath.c_str(), 0);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
     glGenerateMipmap(GL_TEXTURE_2D);
-	glBindTexture(GL_TEXTURE_2D, 0);
-	return textureID;
+	return textureID[0];
 }
 
 void Model::rotate(float rotation, vec3 axes) {
@@ -215,11 +196,10 @@ void Model::scale(vec3 scales) {
 
 void Model::render(void) {
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-	glBindTexture(GL_TEXTURE_2D, textureID);
+	glBindTexture(GL_TEXTURE_2D, textureID[0]);
 	glBindVertexArray(vao[0]);
 	glBindBuffer(GL_ARRAY_BUFFER, vbo[0]);
 	glDrawArrays(GL_QUADS, 0, vertices.size());
-	glBindTexture(GL_TEXTURE_2D, 0);
 }
 
 mat4 Model::getMatrix(void) {

@@ -139,6 +139,7 @@ class Scene {
 				MVP = camera.getMVP(landscape.getMatrix());
 				glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &MVP[0][0]);
 				landscape.render();
+
 				glFlush();
 				glfwSwapBuffers();
 				if (!glfwGetWindowParam(GLFW_OPENED)) {
@@ -202,7 +203,7 @@ int main(void) {
 	if (!glfwOpenWindow(600,600,0,0,0,0,0,0,GLFW_WINDOW)) {
 		printf("Could not open window");
 		glfwTerminate();
-		exit(EXIT_FAILURE);
+		exit(EXIT_FAILURE); 
 	}
 	if (glewInit() != GLEW_OK) {
 		printf("Could not initialise GLEW\n");

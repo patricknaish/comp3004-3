@@ -2,8 +2,6 @@
 
 using namespace glm;
 
-mat4 projection, view, mvp;
-
 Camera::Camera() {
 	projection = perspective(45.0f, 1.0f, 0.1f, 100.0f);
 	view = glm::lookAt(vec3(0.4,0.4,0.4), vec3(0,0,0), vec3(0,1,0));

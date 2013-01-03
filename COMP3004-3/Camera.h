@@ -6,6 +6,8 @@
 
 
 class Camera {
+	private:
+		glm::mat4 projection, view, mvp;
 	public:
 		Camera();
 		void turnLeft(float rotation);
