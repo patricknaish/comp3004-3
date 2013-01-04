@@ -14,11 +14,23 @@
 using namespace std; 
 using namespace glm;
 
+class Scene {
+	private:
+		int running;	
+	public:
+		Scene() {};
+		void run();
+};
+
 GLchar *vertexsource, *fragmentsource;
 GLuint vertexshader, fragmentshader;
 GLuint objectShaderProgram, skyboxShaderProgram;
 
 Camera camera = Camera();
+
+Scene scene = Scene();
+
+Model *skybox, *landscape, *dome;
 
 bool rotatingLeft = false;
 bool rotatingRight = false;
@@ -74,94 +86,73 @@ GLuint setupShaders(string vert, string frag) {
 	return programID;
 }
 
-class Scene {
-	private:
-		int running;	
-	public:
-		Scene() {}
-		void run() {
+void Scene::run() {
 
-			Model skybox("models/plane.obj");
-			skybox.load();
-			skybox.loadTexture("textures/sky512.tga");
+	glUseProgram(skyboxShaderProgram);
+	GLuint SkyboxMatrixID = glGetUniformLocation(skyboxShaderProgram, "MVP");
 
-			Model landscape("models/landscape.obj");
-			landscape.load();
-			landscape.loadTexture("textures/mars.tga");
+	glUseProgram(objectShaderProgram);
+	GLuint ObjectMatrixID = glGetUniformLocation(objectShaderProgram, "MVP");
 
-			Model dome("models/dome.obj");
-			dome.load();
-			dome.loadTexture("textures/dome.tga");
-
-			glUseProgram(skyboxShaderProgram);
-			GLuint SkyboxMatrixID = glGetUniformLocation(skyboxShaderProgram, "MVP");
-
-			glUseProgram(objectShaderProgram);
-			GLuint ObjectMatrixID = glGetUniformLocation(objectShaderProgram, "MVP");
-
-			vec4 LightV = vec4(0.f, 0.f, .8f, 1.f);
-			GLuint LightVID = glGetUniformLocation(objectShaderProgram, "LightV");
-			glUniform4fv(LightVID, 1, &LightV[0]);
+	vec4 LightV = vec4(0.f, 0.f, .8f, 1.f);
+	GLuint LightVID = glGetUniformLocation(objectShaderProgram, "LightV");
+	glUniform4fv(LightVID, 1, &LightV[0]);
 				
-			vec4 LightC = vec4(0.6f, .2f, .2f, 1.f);
-			GLuint LightCID = glGetUniformLocation(objectShaderProgram, "LightC");
-			glUniform4fv(LightCID, 1, &LightC[0]);
+	vec4 LightC = vec4(0.6f, .2f, .2f, 1.f);
+	GLuint LightCID = glGetUniformLocation(objectShaderProgram, "LightC");
+	glUniform4fv(LightCID, 1, &LightC[0]);
 				
-			vec4 Material = vec4(1.f, 0.f, 0.f, 1.f);
-			GLuint MaterialID = glGetUniformLocation(objectShaderProgram, "Material");
-			glUniform4fv(MaterialID, 1, &Material[0]);
+	vec4 Material = vec4(1.f, 0.f, 0.f, 1.f);
+	GLuint MaterialID = glGetUniformLocation(objectShaderProgram, "Material");
+	glUniform4fv(MaterialID, 1, &Material[0]);
 
-			//Running stuff
-			running = GL_TRUE;
-			double old_time = 0, current_time = 0;
-			ostringstream title;
-			float rate = 0.f;
-			while( running ) { 
-				current_time = glfwGetTime();
-				rate = (float)((current_time - old_time) * speed);
-				old_time = current_time;
-				if (rotatingLeft) {
-					camera.turnLeft(rate);
-				}
-				if (rotatingRight) {
-					camera.turnRight(rate);
-				}
-				if (rotatingUp) {
-					camera.increaseElevation(rate);
-				}
-				if (rotatingDown) {
-					camera.decreaseElevation(rate);
-				}
-				//landscape.rotate(rate, vec3(0,1,0));
-				//skybox.rotate(rate, vec3(0,1,0));
-				glClearColor(0,0,0,0);
-				glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-				glUseProgram(skyboxShaderProgram);
-				mat4 MVP = camera.getMVP(skybox.getMatrix());
-				glUniformMatrix4fv(SkyboxMatrixID, 1, GL_FALSE, &MVP[0][0]);
-				skybox.render();
-
-				glUseProgram(objectShaderProgram);
-				MVP = camera.getMVP(landscape.getMatrix());
-				glUniformMatrix4fv(ObjectMatrixID, 1, GL_FALSE, &MVP[0][0]);
-				landscape.render();
-				
-				MVP = camera.getMVP(dome.getMatrix());
-				glUniformMatrix4fv(ObjectMatrixID, 1, GL_FALSE, &MVP[0][0]);
-				dome.render();
-
-				glFlush();
-				glfwSwapBuffers();
-				if (!glfwGetWindowParam(GLFW_OPENED)) {
-					running = GL_FALSE;
-				}
-			}
+	//Running stuff
+	running = GL_TRUE;
+	double old_time = 0, current_time = 0;
+	ostringstream title;
+	float rate = 0.f;
+	while( running ) { 
+		current_time = glfwGetTime();
+		rate = (float)((current_time - old_time) * speed);
+		old_time = current_time;
+		if (rotatingLeft) {
+			camera.turnLeft(rate);
 		}
-		void interrupt() {
+		if (rotatingRight) {
+			camera.turnRight(rate);
+		}
+		if (rotatingUp) {
+			camera.increaseElevation(rate);
+		}
+		if (rotatingDown) {
+			camera.decreaseElevation(rate);
+		}
+		//landscape.rotate(rate, vec3(0,1,0));
+		//skybox.rotate(rate, vec3(0,1,0));
+		glClearColor(0,0,0,0);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+		glUseProgram(skyboxShaderProgram);
+		mat4 MVP = camera.getMVP(skybox->getMatrix());
+		glUniformMatrix4fv(SkyboxMatrixID, 1, GL_FALSE, &MVP[0][0]);
+		skybox->render();
+
+		glUseProgram(objectShaderProgram);
+		MVP = camera.getMVP(landscape->getMatrix());
+		glUniformMatrix4fv(ObjectMatrixID, 1, GL_FALSE, &MVP[0][0]);
+		landscape->render();
+				
+		MVP = camera.getMVP(dome->getMatrix());
+		glUniformMatrix4fv(ObjectMatrixID, 1, GL_FALSE, &MVP[0][0]);
+		dome->render();
+
+		glFlush();
+		glfwSwapBuffers();
+		if (!glfwGetWindowParam(GLFW_OPENED)) {
 			running = GL_FALSE;
 		}
-};
+	}
+}
 
 void GLFWCALL keyHandler(int key, int action) {
 	if (action == GLFW_PRESS) {
@@ -239,6 +230,17 @@ int main(void) {
 	objectShaderProgram = setupShaders("objshader.vert", "objshader.frag");
 	skyboxShaderProgram = setupShaders("objshader.vert", "skyshader.frag");
 
-	Scene scene;
+	skybox = new Model("models/plane.obj");
+	skybox->load();
+	skybox->loadTexture("textures/sky512.tga");
+
+	landscape = new Model("models/landscape.obj");
+	landscape->load();
+	landscape->loadTexture("textures/mars.tga");
+
+	dome = new Model("models/dome.obj");
+	dome->load();
+	dome->loadTexture("textures/dome.tga");
+
 	scene.run();
 }

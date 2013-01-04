@@ -30,9 +30,12 @@ void Model::load(void) {
 		vector<int> uvIndices;
 		vector<int> normalIndices;
 
-		cout << "Loading " << path << "... ";
+		cout << "Loading " << path << "... \r";
 
 		while(file.good()) {
+
+			lineIndex++;
+
 			parts.clear();
 			
 			getline(file, line);
@@ -167,12 +170,12 @@ void Model::load(void) {
 		glEnableVertexAttribArray(2);
 		glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(vec3), (const GLvoid*)0);
 
-		cout << "loaded" << endl;
+		cout << "Loaded " << path << " [" << lineIndex << "]" << endl;
 
 		return;
 	}
 
-	cout << endl << "Could not load " << path << endl;
+	cout << "Could not load " << path << endl;
 }
 
 GLuint Model::loadTexture(string texPath) {
