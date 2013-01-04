@@ -99,7 +99,7 @@ class Scene {
 			GLuint LightVID = glGetUniformLocation(objectShaderProgram, "LightV");
 			glUniform4fv(LightVID, 1, &LightV[0]);
 				
-			vec4 LightC = vec4(1.f, .5f, .5f, 1.f);
+			vec4 LightC = vec4(0.6f, .2f, .2f, 1.f);
 			GLuint LightCID = glGetUniformLocation(objectShaderProgram, "LightC");
 			glUniform4fv(LightCID, 1, &LightC[0]);
 				
@@ -225,6 +225,8 @@ int main(void) {
 	glfwSetKeyCallback(keyHandler);
 	glEnable(GL_DEPTH_TEST);
 	glDepthFunc(GL_LESS);
+	/*glEnable(GL_CULL_FACE);
+	glCullFace(GL_FRONT);*/
 
 	objectShaderProgram = setupShaders("objshader.vert", "objshader.frag");
 	skyboxShaderProgram = setupShaders("objshader.vert", "skyshader.frag");
