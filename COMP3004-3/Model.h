@@ -25,6 +25,9 @@ class Model {
 		std::vector<glm::vec3> normals;
 
 		glm::mat4 model;
+
+		bool isTriangles;
+		bool isQuads;
 	public:
 		Model(std::string sourceFile);
 		void load(void);

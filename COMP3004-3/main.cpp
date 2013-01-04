@@ -81,13 +81,17 @@ class Scene {
 		Scene() {}
 		void run() {
 
+			Model skybox("models/plane.obj");
+			skybox.load();
+			skybox.loadTexture("textures/sky512.tga");
+
 			Model landscape("models/landscape.obj");
 			landscape.load();
 			landscape.loadTexture("textures/mars.tga");
 
-			Model skybox("models/plane.obj");
-			skybox.load();
-			skybox.loadTexture("textures/sky512.tga");
+			Model dome("models/dome.obj");
+			dome.load();
+			dome.loadTexture("textures/dome.tga");
 
 			glUseProgram(skyboxShaderProgram);
 			GLuint SkyboxMatrixID = glGetUniformLocation(skyboxShaderProgram, "MVP");
@@ -128,8 +132,8 @@ class Scene {
 				if (rotatingDown) {
 					camera.decreaseElevation(rate);
 				}
-				landscape.rotate(rate, vec3(0,1,0));
-				skybox.rotate(rate, vec3(0,1,0));
+				//landscape.rotate(rate, vec3(0,1,0));
+				//skybox.rotate(rate, vec3(0,1,0));
 				glClearColor(0,0,0,0);
 				glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -142,6 +146,10 @@ class Scene {
 				MVP = camera.getMVP(landscape.getMatrix());
 				glUniformMatrix4fv(ObjectMatrixID, 1, GL_FALSE, &MVP[0][0]);
 				landscape.render();
+				
+				MVP = camera.getMVP(dome.getMatrix());
+				glUniformMatrix4fv(ObjectMatrixID, 1, GL_FALSE, &MVP[0][0]);
+				dome.render();
 
 				glFlush();
 				glfwSwapBuffers();

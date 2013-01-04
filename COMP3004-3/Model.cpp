@@ -6,6 +6,7 @@ using namespace glm;
 Model::Model(string sourceFile) {
 	path = sourceFile;
 	mtllib = name = "None";
+	isTriangles = isQuads = false;
 }
 
 void Model::load(void) {
@@ -121,6 +122,12 @@ void Model::load(void) {
 					uvIndices.push_back(uvIndex);
 					normalIndices.push_back(normIndex);
 				}
+				if (parts.size() == 3) {
+					isTriangles = true;
+				}
+				else if (parts.size() == 4) {
+					isQuads = true;
+				}
 				continue;
 			}
 		}
@@ -199,7 +206,12 @@ void Model::render(void) {
 	glBindTexture(GL_TEXTURE_2D, textureID[0]);
 	glBindVertexArray(vao[0]);
 	glBindBuffer(GL_ARRAY_BUFFER, vbo[0]);
-	glDrawArrays(GL_QUADS, 0, vertices.size());
+	if (isTriangles) {
+		glDrawArrays(GL_TRIANGLES, 0, vertices.size());
+	}
+	if (isQuads) {
+		glDrawArrays(GL_QUADS, 0, vertices.size());
+	}
 }
 
 mat4 Model::getMatrix(void) {
