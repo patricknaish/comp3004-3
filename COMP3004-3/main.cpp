@@ -32,12 +32,14 @@ Scene scene = Scene();
 
 Model *skybox, *landscape, *dome;
 
+bool increasingVelocity = false;
+bool decreasingVelocity = false;
 bool rotatingLeft = false;
 bool rotatingRight = false;
 bool rotatingUp = false;
 bool rotatingDown = false;
 
-const float speed = 60;
+const float speed = 10;
 
 //Modified from Tutorial 2
 char* filetobuf(string file) { /* A simple function that will read a file into an allocated char pointer buffer */
@@ -88,6 +90,18 @@ GLuint setupShaders(string vert, string frag) {
 
 void Scene::run() {
 
+	skybox = new Model("models/plane.obj");
+	skybox->load();
+	skybox->loadTexture("textures/sky512.tga");
+
+	landscape = new Model("models/landscape.obj");
+	landscape->load();
+	landscape->loadTexture("textures/mars.tga");
+
+	dome = new Model("models/dome.obj");
+	dome->load();
+	dome->loadTexture("textures/dome.tga");
+
 	glUseProgram(skyboxShaderProgram);
 	GLuint SkyboxMatrixID = glGetUniformLocation(skyboxShaderProgram, "MVP");
 
@@ -108,27 +122,37 @@ void Scene::run() {
 
 	//Running stuff
 	running = GL_TRUE;
-	double old_time = 0, current_time = 0;
+	double old_time = 0, current_time = 0, time_diff = 0;
 	ostringstream title;
 	float rate = 0.f;
 	while( running ) { 
 		current_time = glfwGetTime();
-		rate = (float)((current_time - old_time) * speed);
+		time_diff = current_time-old_time;
+		rate = (float)(time_diff * speed);
 		old_time = current_time;
+		if (increasingVelocity) {
+			camera.increaseVelocity(time_diff);
+			camera.move();
+		}
+		if (decreasingVelocity) {
+			camera.decreaseVelocity(time_diff);
+		}
+		camera.move();
 		if (rotatingLeft) {
-			camera.turnLeft(rate);
+			camera.turnLeft(time_diff);
 		}
 		if (rotatingRight) {
-			camera.turnRight(rate);
+			camera.turnRight(time_diff);
 		}
 		if (rotatingUp) {
-			camera.increaseElevation(rate);
+			camera.increaseElevation(time_diff/2);
 		}
 		if (rotatingDown) {
-			camera.decreaseElevation(rate);
+			camera.decreaseElevation(time_diff/2);
 		}
-		//landscape.rotate(rate, vec3(0,1,0));
-		//skybox.rotate(rate, vec3(0,1,0));
+		/*landscape->rotate(rate, vec3(0,1,0));
+		dome->rotate(rate, vec3(0,1,0));
+		skybox->rotate(rate, vec3(0,1,0));*/
 		glClearColor(0,0,0,0);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -161,8 +185,8 @@ void GLFWCALL keyHandler(int key, int action) {
 			exit(EXIT_SUCCESS);
 		}
 		switch(key) {
-			case GLFW_KEY_UP: camera.increaseVelocity(); break;
-			case GLFW_KEY_DOWN: camera.decreaseVelocity(); break;
+			case GLFW_KEY_UP: increasingVelocity = true; break;
+			case GLFW_KEY_DOWN: decreasingVelocity = true; break;
 			case GLFW_KEY_RIGHT: rotatingRight = true; break;
 			case GLFW_KEY_LEFT: rotatingLeft = true; break;
 			case GLFW_KEY_PAGEUP: rotatingUp = true; break;
@@ -184,6 +208,8 @@ void GLFWCALL keyHandler(int key, int action) {
 	}
 	else if (action == GLFW_RELEASE) {
 		switch(key) {
+			case GLFW_KEY_UP: increasingVelocity = false; break;
+			case GLFW_KEY_DOWN: decreasingVelocity = false; break;
 			case GLFW_KEY_RIGHT: rotatingRight = false; break;
 			case GLFW_KEY_LEFT: rotatingLeft = false; break;
 			case GLFW_KEY_PAGEUP: rotatingUp = false; break;
@@ -229,18 +255,6 @@ int main(void) {
 
 	objectShaderProgram = setupShaders("objshader.vert", "objshader.frag");
 	skyboxShaderProgram = setupShaders("objshader.vert", "skyshader.frag");
-
-	skybox = new Model("models/plane.obj");
-	skybox->load();
-	skybox->loadTexture("textures/sky512.tga");
-
-	landscape = new Model("models/landscape.obj");
-	landscape->load();
-	landscape->loadTexture("textures/mars.tga");
-
-	dome = new Model("models/dome.obj");
-	dome->load();
-	dome->loadTexture("textures/dome.tga");
 
 	scene.run();
 }
