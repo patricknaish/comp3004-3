@@ -30,8 +30,6 @@ Camera camera = Camera();
 
 Scene scene = Scene();
 
-Model *skybox, *landscape, *dome;
-
 bool increasingVelocity = false;
 bool decreasingVelocity = false;
 bool rotatingLeft = false;
@@ -90,17 +88,65 @@ GLuint setupShaders(string vert, string frag) {
 
 void Scene::run() {
 
-	skybox = new Model("models/plane.obj");
-	skybox->load();
-	skybox->loadTexture("textures/sky512.tga");
+	Model skybox("models/plane.obj");
+	skybox.load();
+	skybox.loadTexture("textures/sky512.tga");
 
-	landscape = new Model("models/landscape.obj");
-	landscape->load();
-	landscape->loadTexture("textures/mars.tga");
+	Model landscape("models/landscape.obj");
+	landscape.load();
+	landscape.loadTexture("textures/mars.tga");
 
-	dome = new Model("models/dome.obj");
-	dome->load();
-	dome->loadTexture("textures/dome.tga");
+	Model beacon1("models/beacon1.obj");
+	beacon1.load();
+	beacon1.loadTexture("textures/beacon.tga");
+
+	Model beacon2("models/beacon2.obj");
+	beacon2.load();
+	beacon2.loadTexture("textures/beacon.tga");
+
+	Model beacon3("models/beacon3.obj");
+	beacon3.load();
+	beacon3.loadTexture("textures/beacon.tga");
+
+	Model beacon4("models/beacon4.obj");
+	beacon4.load();
+	beacon4.loadTexture("textures/beacon.tga");
+
+	Model beam1("models/beam1.obj");
+	beam1.load();
+	beam1.loadTexture("textures/strut.tga");
+
+	Model beam2("models/beam2.obj");
+	beam2.load();
+	beam2.loadTexture("textures/strut.tga");
+
+	Model dome1("models/dome1.obj");
+	dome1.load();
+	dome1.loadTexture("textures/dome.tga");
+
+	Model dome2("models/dome2.obj");
+	dome2.load();
+	dome2.loadTexture("textures/dome.tga");
+
+	Model strut1("models/strut1.obj");
+	strut1.load();
+	strut1.loadTexture("textures/strut.tga");
+
+	Model strut2("models/strut2.obj");
+	strut2.load();
+	strut2.loadTexture("textures/strut.tga");
+
+	Model strut3("models/strut3.obj");
+	strut3.load();
+	strut3.loadTexture("textures/strut.tga");
+
+	Model strut4("models/strut1.obj");
+	strut4.load();
+	strut4.loadTexture("textures/strut.tga");
+
+	Model walkway1("models/walkway1.obj");
+	walkway1.load();
+	walkway1.loadTexture("textures/walkway1.tga");
 
 	glUseProgram(skyboxShaderProgram);
 	GLuint SkyboxMatrixID = glGetUniformLocation(skyboxShaderProgram, "MVP");
@@ -157,18 +203,66 @@ void Scene::run() {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		glUseProgram(skyboxShaderProgram);
-		mat4 MVP = camera.getMVP(skybox->getMatrix());
+		mat4 MVP = camera.getMVP(skybox.getMatrix());
 		glUniformMatrix4fv(SkyboxMatrixID, 1, GL_FALSE, &MVP[0][0]);
-		skybox->render();
+		skybox.render();
 
 		glUseProgram(objectShaderProgram);
-		MVP = camera.getMVP(landscape->getMatrix());
+		MVP = camera.getMVP(landscape.getMatrix());
 		glUniformMatrix4fv(ObjectMatrixID, 1, GL_FALSE, &MVP[0][0]);
-		landscape->render();
+		landscape.render();
 				
-		MVP = camera.getMVP(dome->getMatrix());
+		MVP = camera.getMVP(beacon1.getMatrix());
 		glUniformMatrix4fv(ObjectMatrixID, 1, GL_FALSE, &MVP[0][0]);
-		dome->render();
+		beacon1.render();
+
+		MVP = camera.getMVP(beacon2.getMatrix());
+		glUniformMatrix4fv(ObjectMatrixID, 1, GL_FALSE, &MVP[0][0]);
+		beacon2.render();
+
+		MVP = camera.getMVP(beacon3.getMatrix());
+		glUniformMatrix4fv(ObjectMatrixID, 1, GL_FALSE, &MVP[0][0]);
+		beacon3.render();
+
+		MVP = camera.getMVP(beacon4.getMatrix());
+		glUniformMatrix4fv(ObjectMatrixID, 1, GL_FALSE, &MVP[0][0]);
+		beacon4.render();
+
+		MVP = camera.getMVP(beam1.getMatrix());
+		glUniformMatrix4fv(ObjectMatrixID, 1, GL_FALSE, &MVP[0][0]);
+		beam1.render();
+
+		MVP = camera.getMVP(beam2.getMatrix());
+		glUniformMatrix4fv(ObjectMatrixID, 1, GL_FALSE, &MVP[0][0]);
+		beam2.render();
+
+		MVP = camera.getMVP(dome1.getMatrix());
+		glUniformMatrix4fv(ObjectMatrixID, 1, GL_FALSE, &MVP[0][0]);
+		dome1.render();
+
+		MVP = camera.getMVP(dome2.getMatrix());
+		glUniformMatrix4fv(ObjectMatrixID, 1, GL_FALSE, &MVP[0][0]);
+		dome2.render();
+
+		MVP = camera.getMVP(strut1.getMatrix());
+		glUniformMatrix4fv(ObjectMatrixID, 1, GL_FALSE, &MVP[0][0]);
+		strut1.render();
+
+		MVP = camera.getMVP(strut2.getMatrix());
+		glUniformMatrix4fv(ObjectMatrixID, 1, GL_FALSE, &MVP[0][0]);
+		strut2.render();
+
+		MVP = camera.getMVP(strut3.getMatrix());
+		glUniformMatrix4fv(ObjectMatrixID, 1, GL_FALSE, &MVP[0][0]);
+		strut3.render();
+
+		MVP = camera.getMVP(strut4.getMatrix());
+		glUniformMatrix4fv(ObjectMatrixID, 1, GL_FALSE, &MVP[0][0]);
+		strut4.render();
+
+		MVP = camera.getMVP(walkway1.getMatrix());
+		glUniformMatrix4fv(ObjectMatrixID, 1, GL_FALSE, &MVP[0][0]);
+		walkway1.render();
 
 		glFlush();
 		glfwSwapBuffers();
