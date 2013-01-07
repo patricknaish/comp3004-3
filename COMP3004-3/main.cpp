@@ -144,6 +144,22 @@ void Scene::run() {
 	dome3.load();
 	dome3.loadTexture("textures/dome.tga");
 
+	Model landingpad1("models/landingpad1.obj");
+	landingpad1.load();
+	landingpad1.loadTexture("textures/landingpad.tga");
+
+	Model landingpad2("models/landingpad2.obj");
+	landingpad2.load();
+	landingpad2.loadTexture("textures/landingpad.tga");
+
+	Model landingpad3("models/landingpad3.obj");
+	landingpad3.load();
+	landingpad3.loadTexture("textures/landingpad.tga");
+
+	Model landingpad4("models/landingpad4.obj");
+	landingpad4.load();
+	landingpad4.loadTexture("textures/landingpad.tga");
+
 	Model panelsupport1("models/panelsupport1.obj");
 	panelsupport1.load();
 	panelsupport1.loadTexture("textures/strut.tga");
@@ -302,6 +318,22 @@ void Scene::run() {
 		MVP = camera.getMVP(dome3.getMatrix());
 		glUniformMatrix4fv(ObjectMatrixID, 1, GL_FALSE, &MVP[0][0]);
 		dome3.render();
+
+		MVP = camera.getMVP(landingpad1.getMatrix());
+		glUniformMatrix4fv(ObjectMatrixID, 1, GL_FALSE, &MVP[0][0]);
+		landingpad1.render();
+
+		MVP = camera.getMVP(landingpad2.getMatrix());
+		glUniformMatrix4fv(ObjectMatrixID, 1, GL_FALSE, &MVP[0][0]);
+		landingpad2.render();
+
+		MVP = camera.getMVP(landingpad3.getMatrix());
+		glUniformMatrix4fv(ObjectMatrixID, 1, GL_FALSE, &MVP[0][0]);
+		landingpad3.render();
+
+		MVP = camera.getMVP(landingpad4.getMatrix());
+		glUniformMatrix4fv(ObjectMatrixID, 1, GL_FALSE, &MVP[0][0]);
+		landingpad4.render();
 
 		MVP = camera.getMVP(panelsupport1.getMatrix());
 		glUniformMatrix4fv(ObjectMatrixID, 1, GL_FALSE, &MVP[0][0]);

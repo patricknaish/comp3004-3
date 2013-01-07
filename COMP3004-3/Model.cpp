@@ -31,6 +31,7 @@ void Model::load(void) {
 		vector<int> normalIndices;
 
 		int vertIndex, uvIndex, normIndex;
+		float x, y, z;
 
 		cout << "Loading " << path << "... \r";
 
@@ -71,14 +72,7 @@ void Model::load(void) {
 					parts.push_back(buffer);
 				}
 				for (int i = 0; i < parts.size(); i++) {
-					string face;
-					istringstream ss(parts[i]);
-					getline(ss, face, '/');
-					vertIndex = atoi(face.c_str());
-					getline(ss, face, '/'); 
-					uvIndex = atoi(face.c_str());
-					getline(ss, face); 
-					normIndex = atoi(face.c_str());
+					sscanf(parts[i].c_str(), "%d/%d/%d", &vertIndex, &uvIndex, &normIndex);
 					vertexIndices.push_back(vertIndex);
 					uvIndices.push_back(uvIndex);
 					normalIndices.push_back(normIndex);
@@ -96,12 +90,7 @@ void Model::load(void) {
 			match = line.find("vt", 0);
 			if (match != string::npos) {
 				line = line.substr(match+2);
-				stream = stringstream(line);
-				while (stream >> buffer) {
-					parts.push_back(buffer);
-				}
-				double x = atof(parts[0].c_str());
-				double y = atof(parts[1].c_str());
+				sscanf(line.c_str(), "%f %f", &x, &y);
 				temptextures.push_back(vec2(x, y));
 				continue;
 			}
@@ -110,13 +99,7 @@ void Model::load(void) {
 			match = line.find("vn", 0);
 			if (match != string::npos) {
 				line = line.substr(match+2);
-				stream = stringstream(line);
-				while (stream >> buffer) {
-					parts.push_back(buffer);
-				}
-				double x = atof(parts[0].c_str());
-				double y = atof(parts[1].c_str());
-				double z = atof(parts[2].c_str());
+				sscanf(line.c_str(), "%f %f %f", &x, &y, &z);
 				tempnormals.push_back(vec3(x, y, z));
 				continue;
 			}
@@ -125,33 +108,28 @@ void Model::load(void) {
 			match = line.find("v", 0);
 			if (match != string::npos) {
 				line = line.substr(match+2);
-				stream = stringstream(line);
-				while (stream >> buffer) {
-					parts.push_back(buffer);
-				}
-				double x = atof(parts[0].c_str());
-				double y = atof(parts[1].c_str());
-				double z = atof(parts[2].c_str());
+				sscanf(line.c_str(), "%f %f %f", &x, &y, &z);
 				tempvertices.push_back(vec3(x, y, z));
 				continue;
 			}
-
 			
 		}
 
+		vec3 vertex, normal;
+		vec2 uv;
 		for (int i = 0; i < vertexIndices.size(); i++) {
-			int vertIndex = vertexIndices[i];
-			vec3 vertex = tempvertices[vertIndex-1];
+			vertIndex = vertexIndices[i];
+			vertex = tempvertices[vertIndex-1];
 			vertices.push_back(vertex);
 		}
 		for (int i = 0; i < uvIndices.size(); i++) {
-			int uvIndex = uvIndices[i];
-			vec2 uv = temptextures[uvIndex-1];
+			uvIndex = uvIndices[i];
+			uv = temptextures[uvIndex-1];
 			textures.push_back(uv);
 		}
 		for (int i = 0; i < normalIndices.size(); i++) {
-			int normIndex = normalIndices[i];
-			vec3 normal = tempnormals[normIndex-1];
+			normIndex = normalIndices[i];
+			normal = tempnormals[normIndex-1];
 			normals.push_back(normal);
 		}
 
