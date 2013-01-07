@@ -30,6 +30,8 @@ void Model::load(void) {
 		vector<int> uvIndices;
 		vector<int> normalIndices;
 
+		int vertIndex, uvIndex, normIndex;
+
 		cout << "Loading " << path << "... \r";
 
 		while(file.good()) {
@@ -57,6 +59,36 @@ void Model::load(void) {
 			match = line.find("o", 0);
 			if (match != string::npos) {
 				name = line.substr(match+2);
+				continue;
+			}
+
+			//Face
+			match = line.find("f", 0);
+			if (match != string::npos) {
+				line = line.substr(match+2);
+				stream = stringstream(line);
+				while (stream >> buffer) {
+					parts.push_back(buffer);
+				}
+				for (int i = 0; i < parts.size(); i++) {
+					string face;
+					istringstream ss(parts[i]);
+					getline(ss, face, '/');
+					vertIndex = atoi(face.c_str());
+					getline(ss, face, '/'); 
+					uvIndex = atoi(face.c_str());
+					getline(ss, face); 
+					normIndex = atoi(face.c_str());
+					vertexIndices.push_back(vertIndex);
+					uvIndices.push_back(uvIndex);
+					normalIndices.push_back(normIndex);
+				}
+				if (parts.size() == 3) {
+					isTriangles = true;
+				}
+				else if (parts.size() == 4) {
+					isQuads = true;
+				}
 				continue;
 			}
 
@@ -104,35 +136,7 @@ void Model::load(void) {
 				continue;
 			}
 
-			//Face
-			match = line.find("f", 0);
-			if (match != string::npos) {
-				line = line.substr(match+2);
-				stream = stringstream(line);
-				while (stream >> buffer) {
-					parts.push_back(buffer);
-				}
-				for (int i = 0; i < parts.size(); i++) {
-					string face;
-					istringstream ss(parts[i]);
-					getline(ss, face, '/');
-					int vertIndex = atoi(face.c_str());
-					getline(ss, face, '/'); 
-					int uvIndex = atoi(face.c_str());
-					getline(ss, face); 
-					int normIndex = atoi(face.c_str());
-					vertexIndices.push_back(vertIndex);
-					uvIndices.push_back(uvIndex);
-					normalIndices.push_back(normIndex);
-				}
-				if (parts.size() == 3) {
-					isTriangles = true;
-				}
-				else if (parts.size() == 4) {
-					isQuads = true;
-				}
-				continue;
-			}
+			
 		}
 
 		for (int i = 0; i < vertexIndices.size(); i++) {

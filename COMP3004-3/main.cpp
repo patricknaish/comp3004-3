@@ -88,13 +88,25 @@ GLuint setupShaders(string vert, string frag) {
 
 void Scene::run() {
 
-	Model skybox("models/plane.obj");
-	skybox.load();
-	skybox.loadTexture("textures/sky512.tga");
+	Model skybox1("models/skybox1.obj");
+	skybox1.load();
+	skybox1.loadTexture("textures/sky512.tga");
 
-	Model landscape("models/landscape.obj");
-	landscape.load();
-	landscape.loadTexture("textures/mars.tga");
+	Model skybox2("models/skybox2.obj");
+	skybox2.load();
+	skybox2.loadTexture("textures/skyempty512.tga");
+
+	Model skybox3("models/skybox3.obj");
+	skybox3.load();
+	skybox3.loadTexture("textures/skyempty512.tga");
+
+	Model skybox4("models/skybox4.obj");
+	skybox4.load();
+	skybox4.loadTexture("textures/skyempty512.tga");
+
+	Model ceiling1("models/ceiling1.obj");
+	ceiling1.load();
+	ceiling1.loadTexture("textures/ceiling.tga");
 
 	Model beacon1("models/beacon1.obj");
 	beacon1.load();
@@ -128,6 +140,26 @@ void Scene::run() {
 	dome2.load();
 	dome2.loadTexture("textures/dome.tga");
 
+	Model dome3("models/dome3.obj");
+	dome3.load();
+	dome3.loadTexture("textures/dome.tga");
+
+	Model panelsupport1("models/panelsupport1.obj");
+	panelsupport1.load();
+	panelsupport1.loadTexture("textures/strut.tga");
+
+	Model panelsupport2("models/panelsupport2.obj");
+	panelsupport2.load();
+	panelsupport2.loadTexture("textures/strut.tga");
+
+	Model solarpanel1("models/solarpanel1.obj");
+	solarpanel1.load();
+	solarpanel1.loadTexture("textures/sunbattery.tga");
+
+	Model solarpanel2("models/solarpanel2.obj");
+	solarpanel2.load();
+	solarpanel2.loadTexture("textures/sunbattery.tga");
+
 	Model strut1("models/strut1.obj");
 	strut1.load();
 	strut1.loadTexture("textures/strut.tga");
@@ -140,13 +172,21 @@ void Scene::run() {
 	strut3.load();
 	strut3.loadTexture("textures/strut.tga");
 
-	Model strut4("models/strut1.obj");
+	Model strut4("models/strut4.obj");
 	strut4.load();
 	strut4.loadTexture("textures/strut.tga");
 
 	Model walkway1("models/walkway1.obj");
 	walkway1.load();
-	walkway1.loadTexture("textures/walkway1.tga");
+	walkway1.loadTexture("textures/sunbattery.tga");
+
+	Model walkway2("models/walkway2.obj");
+	walkway2.load();
+	walkway2.loadTexture("textures/sunbattery.tga");
+
+	Model landscape("models/landscape.obj");
+	landscape.load();
+	landscape.loadTexture("textures/mars.tga");
 
 	glUseProgram(skyboxShaderProgram);
 	GLuint SkyboxMatrixID = glGetUniformLocation(skyboxShaderProgram, "MVP");
@@ -178,12 +218,11 @@ void Scene::run() {
 		old_time = current_time;
 		if (increasingVelocity) {
 			camera.increaseVelocity(time_diff);
-			camera.move();
 		}
 		if (decreasingVelocity) {
 			camera.decreaseVelocity(time_diff);
 		}
-		camera.move();
+		camera.move(time_diff);
 		if (rotatingLeft) {
 			camera.turnLeft(time_diff);
 		}
@@ -203,9 +242,25 @@ void Scene::run() {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		glUseProgram(skyboxShaderProgram);
-		mat4 MVP = camera.getMVP(skybox.getMatrix());
+		mat4 MVP = camera.getMVP(skybox1.getMatrix());
 		glUniformMatrix4fv(SkyboxMatrixID, 1, GL_FALSE, &MVP[0][0]);
-		skybox.render();
+		skybox1.render();
+
+		MVP = camera.getMVP(skybox2.getMatrix());
+		glUniformMatrix4fv(SkyboxMatrixID, 1, GL_FALSE, &MVP[0][0]);
+		skybox2.render();
+
+		MVP = camera.getMVP(skybox3.getMatrix());
+		glUniformMatrix4fv(SkyboxMatrixID, 1, GL_FALSE, &MVP[0][0]);
+		skybox3.render();
+
+		MVP = camera.getMVP(skybox4.getMatrix());
+		glUniformMatrix4fv(SkyboxMatrixID, 1, GL_FALSE, &MVP[0][0]);
+		skybox4.render();
+
+		MVP = camera.getMVP(ceiling1.getMatrix());
+		glUniformMatrix4fv(SkyboxMatrixID, 1, GL_FALSE, &MVP[0][0]);
+		ceiling1.render();
 
 		glUseProgram(objectShaderProgram);
 		MVP = camera.getMVP(landscape.getMatrix());
@@ -244,6 +299,26 @@ void Scene::run() {
 		glUniformMatrix4fv(ObjectMatrixID, 1, GL_FALSE, &MVP[0][0]);
 		dome2.render();
 
+		MVP = camera.getMVP(dome3.getMatrix());
+		glUniformMatrix4fv(ObjectMatrixID, 1, GL_FALSE, &MVP[0][0]);
+		dome3.render();
+
+		MVP = camera.getMVP(panelsupport1.getMatrix());
+		glUniformMatrix4fv(ObjectMatrixID, 1, GL_FALSE, &MVP[0][0]);
+		panelsupport1.render();
+
+		MVP = camera.getMVP(panelsupport2.getMatrix());
+		glUniformMatrix4fv(ObjectMatrixID, 1, GL_FALSE, &MVP[0][0]);
+		panelsupport2.render();
+
+		MVP = camera.getMVP(solarpanel1.getMatrix());
+		glUniformMatrix4fv(ObjectMatrixID, 1, GL_FALSE, &MVP[0][0]);
+		solarpanel1.render();
+
+		MVP = camera.getMVP(solarpanel2.getMatrix());
+		glUniformMatrix4fv(ObjectMatrixID, 1, GL_FALSE, &MVP[0][0]);
+		solarpanel2.render();
+
 		MVP = camera.getMVP(strut1.getMatrix());
 		glUniformMatrix4fv(ObjectMatrixID, 1, GL_FALSE, &MVP[0][0]);
 		strut1.render();
@@ -263,6 +338,10 @@ void Scene::run() {
 		MVP = camera.getMVP(walkway1.getMatrix());
 		glUniformMatrix4fv(ObjectMatrixID, 1, GL_FALSE, &MVP[0][0]);
 		walkway1.render();
+
+		MVP = camera.getMVP(walkway2.getMatrix());
+		glUniformMatrix4fv(ObjectMatrixID, 1, GL_FALSE, &MVP[0][0]);
+		walkway2.render();
 
 		glFlush();
 		glfwSwapBuffers();

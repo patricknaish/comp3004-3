@@ -8,7 +8,7 @@ Camera::Camera() {
 	direction = vec3(1.f, 0.f, 0.f);
 	target = pos + direction;
 	velocity = 0.f;
-	projection = perspective(45.0f, 1.0f, 0.1f, 100.0f);
+	projection = perspective(45.0f, 1.0f, 0.0001f, 100.0f);
 	view = glm::lookAt(pos, target, vec3(0,1,0));
 }
 
@@ -34,8 +34,8 @@ void Camera::turnRight(float rotation) {
 
 void Camera::increaseElevation(float delta) {
 	float height = pos.y + delta;
-	if (height > 0.8f) {
-		height = 0.8f;
+	if (height > 2.8f) {
+		height = 2.8f;
 	}
 	pos = vec3(pos.x, height, pos.z);
 	direction = vec3(glm::cos(yaw), 0, glm::sin(yaw));
@@ -55,20 +55,22 @@ void Camera::decreaseElevation(float delta) {
 }
 
 void Camera::increaseVelocity(float delta) {
-	if (velocity + delta*0.00001 > 0.00004) {
-		velocity = 0.00004;
+	delta /= 10;
+	if (velocity + delta > 1) {
+		velocity = 1;
 	}
 	else {
-		velocity += delta*0.00001;
+		velocity += delta;
 	}
 }
 
 void Camera::decreaseVelocity(float delta) {
-	if (velocity - delta*0.00001< 0.0) {
+	delta /= 10;
+	if (velocity - delta < 0.0) {
 		velocity = 0.0;
 	}
 	else {
-		velocity -= delta*0.00001;
+		velocity -= delta;
 	}
 }
 
@@ -76,8 +78,8 @@ void Camera::resetVelocity() {
 	velocity = 0.f;
 }
 
-void Camera::move() {
-	pos = pos + vec3(direction.x*velocity, direction.y*velocity, direction.z*velocity);
+void Camera::move(float delta) {
+	pos = pos + vec3(direction.x*velocity*delta, direction.y*velocity*delta, direction.z*velocity*delta);
 	direction = vec3(glm::cos(yaw), 0, glm::sin(yaw));
 	target = pos + direction;
 	view = glm::lookAt(pos, target, vec3(0,1,0));

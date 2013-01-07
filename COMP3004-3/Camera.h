@@ -23,7 +23,7 @@ class Camera {
 		void increaseVelocity(float delta);
 		void decreaseVelocity(float delta);
 		void resetVelocity();
-		void move();
+		void move(float delta);
 		void jumpTo();
 		void lookAt();
 		void followPath();
