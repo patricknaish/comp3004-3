@@ -24,8 +24,8 @@ class Camera {
 		void decreaseVelocity(float delta);
 		void resetVelocity();
 		void move(float delta);
-		void jumpTo();
-		void lookAt();
+		void jumpTo(glm::vec3 position);
+		void lookAt(float rotation);
 		void followPath();
 		glm::mat4 getMVP(glm::mat4 model);
 };

@@ -1,0 +1,46 @@
+==models==
+beacon1.obj - Created by me in Blender
+beacon2.obj
+beacon3.obj
+beacon4.obj
+beam1.obj - Created by me in Blender
+beam2.obj
+ceiling1.obj - Created by me in Blender
+dome1.obj - Created by me in Blender
+dome2.obj
+dome3.obj
+landingpad1.obj - Created by me in Blender
+landingpad2.obj
+landingpad3.obj
+landingpad4.obj
+landscape.obj - Created using the ANT landscape addon in Blender
+panelsupport1.obj - Created by me in Blender
+panelsupport2.obj
+ship1.obj - Used free model and texture from http://www.turbosquid.com/FullPreview/Index.cfm/ID/531813
+ship2.obj
+ship3.obj
+ship4.obj
+skybox1.obj - Created by me in Blender
+skybox2.obj
+skybox3.obj
+skybox4.obj
+solarpanel1.obj - Created by me in Blender
+solarpanel2.obj
+strut1.obj - Created by me in Blender
+strut2.obj
+strut3.obj
+strut4.obj
+walkway1.obj - Created by me in Blender
+walkway2.obj
+
+==textures==
+beacon.tga - Created by me in Paint.NET
+ceiling.tga - Created by me in Paint.NET
+dome.tga - Created by me in Paint.NET
+landingpad.tga - Created by me in Paint.NET
+mars.tga - Used free texture from http://www.spiralgraphics.biz/packs/terrain_desert_barren/index.htm?17
+ship.tga - Used free model and texture from http://www.turbosquid.com/FullPreview/Index.cfm/ID/531813
+sky512.tga - Created by me in Terragen
+skyempty512.tga - Created by me in Terragen
+strut.tga - Created by me in Paint.NET
+sunbattery.tga - Solar panel texture

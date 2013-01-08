@@ -3,7 +3,7 @@
 using namespace glm;
 
 Camera::Camera() {
-	pos = vec3(0.4f, 0.05f, 0.4f);
+	pos = vec3(0.2f, 0.05f, 0.4f);
 	yaw = 180.f;
 	direction = vec3(glm::cos(yaw), 0, glm::sin(yaw));
 	target = pos + direction;
@@ -85,12 +85,18 @@ void Camera::move(float delta) {
 	view = glm::lookAt(pos, target, vec3(0,1,0));
 }
 
-void Camera::jumpTo() {
-
+void Camera::jumpTo(vec3 position) {
+	pos = position;
+	direction = vec3(glm::cos(yaw), 0, glm::sin(yaw));
+	target = pos + direction;
+	view = glm::lookAt(pos, target, vec3(0,1,0));
 }
 
-void Camera::lookAt() {
-
+void Camera::lookAt(float rotation) {
+	yaw = rotation;
+	direction = vec3(glm::cos(yaw), 0, glm::sin(yaw));
+	target = pos + direction;
+	view = glm::lookAt(pos, target, vec3(0,1,0));
 }
 
 void Camera::followPath() {

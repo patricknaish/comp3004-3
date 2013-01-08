@@ -289,9 +289,6 @@ void Scene::run() {
 		if (rotatingDown) {
 			camera.decreaseElevation(time_diff/2);
 		}
-		/*landscape->rotate(rate, vec3(0,1,0));
-		dome->rotate(rate, vec3(0,1,0));
-		skybox->rotate(rate, vec3(0,1,0));*/
 		glClearColor(0,0,0,0);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -391,7 +388,7 @@ void Scene::run() {
 
 		if (launchingShip1) {
 			ship1Height += time_diff*(ship1Height+0.01);
-			ship1.translate(vec3(0, time_diff/10, 0));
+			ship1.translate(vec3(0, time_diff*(ship1Height+0.01), 0));
 			if (ship1Height >= 0.2) {
 				launchingShip1 = false;
 				rotatingShip1 = true;
@@ -408,7 +405,7 @@ void Scene::run() {
 			}
 		} else if (landingShip1) {
 			ship1Height -= time_diff*(ship1Height+0.01);
-			ship1.translate(vec3(0, -time_diff/10, 0));
+			ship1.translate(vec3(0, -time_diff*(ship1Height+0.01), 0));
 			if (ship1Height <= 0) {
 				landingShip1 = false;
 				waitingShip1 = true;
@@ -428,7 +425,7 @@ void Scene::run() {
 
 		if (launchingShip2) {
 			ship2Height += time_diff*(ship2Height+0.01);
-			ship2.translate(vec3(0, time_diff/10, 0));
+			ship2.translate(vec3(0, time_diff*(ship2Height+0.01), 0));
 			if (ship2Height >= 0.13) {
 				launchingShip2 = false;
 				rotatingShip2 = true;
@@ -445,7 +442,7 @@ void Scene::run() {
 			}
 		} else if (landingShip2) {
 			ship2Height -= time_diff*(ship2Height+0.01);
-			ship2.translate(vec3(0, -time_diff/10, 0));
+			ship2.translate(vec3(0, -time_diff*(ship2Height+0.01), 0));
 			if (ship2Height <= 0) {
 				landingShip2 = false;
 				waitingShip2 = true;
@@ -465,7 +462,7 @@ void Scene::run() {
 
 		if (launchingShip3) {
 			ship3Height += time_diff*(ship3Height+0.01);
-			ship3.translate(vec3(0, time_diff/10, 0));
+			ship3.translate(vec3(0, time_diff*(ship3Height+0.01), 0));
 			if (ship3Height >= 0.06) {
 				launchingShip3 = false;
 				rotatingShip3 = true;
@@ -473,7 +470,7 @@ void Scene::run() {
 		} else if (rotatingShip3) {
 			ship3Angle += time_diff*30;
 			ship3.translate(vec3(0.19900, -(0.05625+ship3Height), -0.009226));
-			ship3.rotate(time_diff*50, vec3(0, 1, 0));
+			ship3.rotate(time_diff*30, vec3(0, 1, 0));
 			ship3.translate(vec3(-0.19900, 0.05625+ship3Height, 0.009226));
 			if (ship3Angle >= 360) {
 				ship3Angle = 0;
@@ -482,7 +479,7 @@ void Scene::run() {
 			}
 		} else if (landingShip3) {
 			ship3Height -= time_diff*(ship3Height+0.01);
-			ship3.translate(vec3(0, -time_diff/10, 0));
+			ship3.translate(vec3(0, -time_diff*(ship3Height+0.01), 0));
 			if (ship3Height <= 0) {
 				landingShip3 = false;
 				waitingShip3 = true;
@@ -502,7 +499,7 @@ void Scene::run() {
 
 		if (launchingShip4) {
 			ship4Height += time_diff*(ship4Height+0.01);
-			ship4.translate(vec3(0, time_diff/10, 0));
+			ship4.translate(vec3(0, time_diff*(ship4Height+0.01), 0));
 			if (ship4Height >= 0.1) {
 				launchingShip4 = false;
 				rotatingShip4 = true;
@@ -519,7 +516,7 @@ void Scene::run() {
 			}
 		} else if (landingShip4) {
 			ship4Height -= time_diff*(ship4Height+0.01);
-			ship4.translate(vec3(0, -time_diff/10, 0));
+			ship4.translate(vec3(0, -time_diff*(ship4Height+0.01), 0));
 			if (ship4Height <= 0) {
 				landingShip4 = false;
 				waitingShip4 = true;
@@ -584,17 +581,11 @@ void GLFWCALL keyHandler(int key, int action) {
 			case GLFW_KEY_PAGEDOWN: rotatingDown = true; break;
 			case GLFW_KEY_SPACE: camera.resetVelocity(); break;
 			case 'P': ;
-			case 'p': camera.jumpTo(); break;
-			case 'Y': ;
-			case 'y': camera.jumpTo(); break;
-			case 'U': ;
-			case 'u': camera.jumpTo(); break;
+			case 'p': camera.jumpTo(vec3(0.2f, 0.05f, 0.4f)); break;
 			case 'T': ;
 			case 't': camera.followPath(); break;
 			case 'E': ;
-			case 'e': camera.jumpTo(); break;
-			case 'R': ;
-			case 'r': ; break;
+			case 'e': camera.jumpTo(vec3(0.2f, 0.05f, 0.4f)); break;
 		}
 	}
 	else if (action == GLFW_RELEASE) {
@@ -619,7 +610,7 @@ int main(void) {
 		printf("Initialised GLFW\n");
 	}
 	glfwOpenWindowHint(GLFW_WINDOW_NO_RESIZE, GL_TRUE);
-	if (!glfwOpenWindow(600,600,0,0,0,0,0,0,GLFW_WINDOW)) {
+	if (!glfwOpenWindow(1000,1000,0,0,0,0,0,0,GLFW_WINDOW)) {
 		printf("Could not open window");
 		glfwTerminate();
 		exit(EXIT_FAILURE); 
@@ -641,8 +632,6 @@ int main(void) {
 	glfwSetKeyCallback(keyHandler);
 	glEnable(GL_DEPTH_TEST);
 	glDepthFunc(GL_LESS);
-	/*glEnable(GL_CULL_FACE);
-	glCullFace(GL_FRONT);*/
 
 	objectShaderProgram = setupShaders("objshader.vert", "objshader.frag");
 	skyboxShaderProgram = setupShaders("objshader.vert", "skyshader.frag");
