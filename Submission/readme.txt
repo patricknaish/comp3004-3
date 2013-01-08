@@ -8,6 +8,7 @@ Use T to run the tour.
 Use E to exit the tour.
 Use ESC or Q to exit the program.
 The mouse is not used.
+Currently the landscape takes a long time to load. Apologies for this.
 
 
 ==Files==

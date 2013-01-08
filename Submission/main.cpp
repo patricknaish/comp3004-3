@@ -47,6 +47,10 @@ float ship2Height, ship2Angle, ship2Wait;
 float ship3Height, ship3Angle, ship3Wait;
 float ship4Height, ship4Angle, ship4Wait;
 
+bool cameraTour;
+bool raising1Camera, rotating1Camera, accelerating1Camera, decelerating1Camera, rotating2Camera, lowering1Camera;
+float cameraHeight, cameraAngle, cameraSpeed;
+
 const float speed = 10;
 
 //Modified from Tutorial 2
@@ -289,9 +293,53 @@ void Scene::run() {
 		if (rotatingDown) {
 			camera.decreaseElevation(time_diff/2);
 		}
-		/*landscape->rotate(rate, vec3(0,1,0));
-		dome->rotate(rate, vec3(0,1,0));
-		skybox->rotate(rate, vec3(0,1,0));*/
+
+		if (cameraTour)  {
+			//raising1Camera = rotating1Camera = accelerating1Camera = decelerating1Camera = rotating2Camera = false;
+			if (raising1Camera) {
+				cameraHeight += time_diff/100;
+				camera.increaseElevation(time_diff/100);
+				if (cameraHeight >= 0.05) {
+					raising1Camera = false;
+					rotating1Camera = true;
+				}
+			} else if (rotating1Camera) {
+				cameraAngle += time_diff/10;
+				camera.turnRight(time_diff/10);
+				if (cameraAngle >= 0.6) {
+					rotating1Camera = false;
+					accelerating1Camera = true;
+				}
+			} else if (accelerating1Camera) {
+				cameraSpeed += time_diff;
+				camera.increaseVelocity(time_diff);
+				if (cameraSpeed >= 3) {
+					accelerating1Camera = false;
+					decelerating1Camera = true;
+				}
+			} else if (decelerating1Camera) {
+				cameraSpeed -= time_diff;
+				camera.decreaseVelocity(time_diff);
+				if (cameraSpeed <= 0) {
+					decelerating1Camera = false;
+					rotating2Camera = true;
+				}
+			} else if (rotating2Camera) {
+				cameraAngle += time_diff/10;
+				camera.turnLeft(time_diff/10);
+				if (cameraAngle >= 3.6) {
+					rotating2Camera = false;
+					lowering1Camera = true;
+				}
+			} else if (lowering1Camera) {
+				cameraHeight -= time_diff/100;
+				camera.decreaseElevation(time_diff/100);
+				if (cameraHeight <= 0) {
+					lowering1Camera = false;
+				}
+			}
+		}
+
 		glClearColor(0,0,0,0);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -584,11 +632,26 @@ void GLFWCALL keyHandler(int key, int action) {
 			case GLFW_KEY_PAGEDOWN: rotatingDown = true; break;
 			case GLFW_KEY_SPACE: camera.resetVelocity(); break;
 			case 'P': ;
-			case 'p': camera.jumpTo(vec3(0.2f, 0.05f, 0.4f)); break;
+			case 'p': camera.jumpTo(vec3(0.2f, 0.05f, 0.4f)); camera.lookAt(180); break;
 			case 'T': ;
-			case 't': camera.followPath(); break;
+			case 't': {
+						cameraTour = true; 
+						raising1Camera = true;
+						rotating1Camera = accelerating1Camera = decelerating1Camera = rotating2Camera = lowering1Camera = false;
+						cameraHeight = cameraAngle = cameraSpeed = 0;
+						camera.jumpTo(vec3(0.2f, 0.05f, 0.4f)); 
+						camera.lookAt(180);
+						break;
+					  }
 			case 'E': ;
-			case 'e': camera.jumpTo(vec3(0.2f, 0.05f, 0.4f)); break;
+			case 'e': {
+						cameraTour = false; 
+						raising1Camera = rotating1Camera = accelerating1Camera = decelerating1Camera = rotating2Camera = lowering1Camera = false;
+						cameraHeight = cameraAngle = cameraSpeed = 0;
+						camera.jumpTo(vec3(0.2f, 0.05f, 0.4f)); 
+						camera.lookAt(180);
+						break;
+					  }
 		}
 	}
 	else if (action == GLFW_RELEASE) {
@@ -613,7 +676,7 @@ int main(void) {
 		printf("Initialised GLFW\n");
 	}
 	glfwOpenWindowHint(GLFW_WINDOW_NO_RESIZE, GL_TRUE);
-	if (!glfwOpenWindow(1000,1000,0,0,0,0,0,0,GLFW_WINDOW)) {
+	if (!glfwOpenWindow(600,600,0,0,0,0,0,0,GLFW_WINDOW)) {
 		printf("Could not open window");
 		glfwTerminate();
 		exit(EXIT_FAILURE); 
@@ -635,8 +698,6 @@ int main(void) {
 	glfwSetKeyCallback(keyHandler);
 	glEnable(GL_DEPTH_TEST);
 	glDepthFunc(GL_LESS);
-	/*glEnable(GL_CULL_FACE);
-	glCullFace(GL_FRONT);*/
 
 	objectShaderProgram = setupShaders("objshader.vert", "objshader.frag");
 	skyboxShaderProgram = setupShaders("objshader.vert", "skyshader.frag");

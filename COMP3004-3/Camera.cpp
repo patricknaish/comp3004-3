@@ -99,10 +99,6 @@ void Camera::lookAt(float rotation) {
 	view = glm::lookAt(pos, target, vec3(0,1,0));
 }
 
-void Camera::followPath() {
-
-}
-
 glm::mat4 Camera::getMVP(mat4 model) {
 	mvp = projection * view * model;
 	return mvp;

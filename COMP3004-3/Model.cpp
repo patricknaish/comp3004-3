@@ -12,14 +12,13 @@ Model::Model(string sourceFile) {
 void Model::load(void) {
 	string line, buffer;
 	size_t match;
-	stringstream stream;
 	vector<string> parts;
 
 	int lineIndex = 1;
 
 	ifstream file;
 
-	file.open(path);
+	file.open(path.c_str());
 	if (file.is_open()) {
 
 		vector<vec3> tempvertices;
@@ -67,7 +66,8 @@ void Model::load(void) {
 			match = line.find("f", 0);
 			if (match != string::npos) {
 				line = line.substr(match+2);
-				stream = stringstream(line);
+				stringstream stream = stringstream(stringstream::in | stringstream::out); 
+				stream << line;
 				while (stream >> buffer) {
 					parts.push_back(buffer);
 				}

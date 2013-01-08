@@ -31,7 +31,7 @@ class Model {
 	public:
 		Model(std::string sourceFile);
 		void load(void);
-		GLuint Model::loadTexture(std::string texPath);
+		GLuint loadTexture(std::string texPath);
 		void rotate(float rotation, glm::vec3 axes);
 		void translate(glm::vec3 translations);
 		void scale(glm::vec3 scales);

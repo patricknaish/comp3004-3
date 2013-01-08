@@ -26,7 +26,6 @@ class Camera {
 		void move(float delta);
 		void jumpTo(glm::vec3 position);
 		void lookAt(float rotation);
-		void followPath();
 		glm::mat4 getMVP(glm::mat4 model);
 };
 
