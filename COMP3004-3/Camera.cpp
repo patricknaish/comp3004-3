@@ -3,9 +3,9 @@
 using namespace glm;
 
 Camera::Camera() {
-	pos = vec3(-0.4f, 0.3f, -0.4f);
-	yaw = 0.f;
-	direction = vec3(1.f, 0.f, 0.f);
+	pos = vec3(0.4f, 0.05f, 0.4f);
+	yaw = 180.f;
+	direction = vec3(glm::cos(yaw), 0, glm::sin(yaw));
 	target = pos + direction;
 	velocity = 0.f;
 	projection = perspective(45.0f, 1.0f, 0.0001f, 100.0f);

@@ -37,6 +37,16 @@ bool rotatingRight = false;
 bool rotatingUp = false;
 bool rotatingDown = false;
 
+bool launchingShip1, rotatingShip1, landingShip1, waitingShip1;
+bool launchingShip2, rotatingShip2, landingShip2, waitingShip2;
+bool launchingShip3, rotatingShip3, landingShip3, waitingShip3;
+bool launchingShip4, rotatingShip4, landingShip4, waitingShip4;
+
+float ship1Height, ship1Angle, ship1Wait;
+float ship2Height, ship2Angle, ship2Wait;
+float ship3Height, ship3Angle, ship3Wait;
+float ship4Height, ship4Angle, ship4Wait;
+
 const float speed = 10;
 
 //Modified from Tutorial 2
@@ -168,6 +178,22 @@ void Scene::run() {
 	panelsupport2.load();
 	panelsupport2.loadTexture("textures/strut.tga");
 
+	Model ship1("models/ship1.obj");
+	ship1.load();
+	ship1.loadTexture("textures/ship.tga");
+
+	Model ship2("models/ship2.obj");
+	ship2.load();
+	ship2.loadTexture("textures/ship.tga");
+
+	Model ship3("models/ship3.obj");
+	ship3.load();
+	ship3.loadTexture("textures/ship.tga");
+
+	Model ship4("models/ship4.obj");
+	ship4.load();
+	ship4.loadTexture("textures/ship.tga");
+
 	Model solarpanel1("models/solarpanel1.obj");
 	solarpanel1.load();
 	solarpanel1.loadTexture("textures/sunbattery.tga");
@@ -222,9 +248,21 @@ void Scene::run() {
 	GLuint MaterialID = glGetUniformLocation(objectShaderProgram, "Material");
 	glUniform4fv(MaterialID, 1, &Material[0]);
 
+	ship1Angle = ship1Height = ship1Wait = 0;
+	launchingShip1 = true;
+
+	ship2Angle = ship2Height = ship2Wait = 0;
+	launchingShip2 = true;
+
+	ship3Angle = ship3Height = ship3Wait = 0;
+	launchingShip3 = true;
+
+	ship4Angle = ship4Height = ship4Wait = 0;
+	launchingShip4 = true;
+
 	//Running stuff
 	running = GL_TRUE;
-	double old_time = 0, current_time = 0, time_diff = 0;
+	double old_time = glfwGetTime(), current_time = 0, time_diff = 0;
 	ostringstream title;
 	float rate = 0.f;
 	while( running ) { 
@@ -350,6 +388,154 @@ void Scene::run() {
 		MVP = camera.getMVP(solarpanel2.getMatrix());
 		glUniformMatrix4fv(ObjectMatrixID, 1, GL_FALSE, &MVP[0][0]);
 		solarpanel2.render();
+
+		if (launchingShip1) {
+			ship1Height += time_diff*(ship1Height+0.01);
+			ship1.translate(vec3(0, time_diff/10, 0));
+			if (ship1Height >= 0.2) {
+				launchingShip1 = false;
+				rotatingShip1 = true;
+			}
+		} else if (rotatingShip1) {
+			ship1Angle += time_diff*100;
+			ship1.translate(vec3(-0.09385, -(0.009043+ship1Height), 0.24124));
+			ship1.rotate(time_diff*100, vec3(0, -1, 0));
+			ship1.translate(vec3(0.09385, 0.009043+ship1Height, -0.24124));
+			if (ship1Angle >= 1080) {
+				ship1Angle = 0;
+				rotatingShip1 = false;
+				landingShip1 = true;
+			}
+		} else if (landingShip1) {
+			ship1Height -= time_diff*(ship1Height+0.01);
+			ship1.translate(vec3(0, -time_diff/10, 0));
+			if (ship1Height <= 0) {
+				landingShip1 = false;
+				waitingShip1 = true;
+			}
+		} else if (waitingShip1) {
+			ship1Wait += time_diff;
+			if (ship1Wait >= 2) {
+				ship1Wait = 0;
+				waitingShip1 = false;
+				launchingShip1 = true;
+			}
+		}
+
+		MVP = camera.getMVP(ship1.getMatrix());
+		glUniformMatrix4fv(ObjectMatrixID, 1, GL_FALSE, &MVP[0][0]);
+		ship1.render();
+
+		if (launchingShip2) {
+			ship2Height += time_diff*(ship2Height+0.01);
+			ship2.translate(vec3(0, time_diff/10, 0));
+			if (ship2Height >= 0.13) {
+				launchingShip2 = false;
+				rotatingShip2 = true;
+			}
+		} else if (rotatingShip2) {
+			ship2Angle += time_diff*50;
+			ship2.translate(vec3(0.22051, -(0.03418+ship2Height), -0.00911));
+			ship2.rotate(time_diff*50, vec3(0, 1, 0));
+			ship2.translate(vec3(-0.22051, 0.03418+ship2Height, 0.00911));
+			if (ship2Angle >= 720) {
+				ship2Angle = 0;
+				rotatingShip2 = false;
+				landingShip2 = true;
+			}
+		} else if (landingShip2) {
+			ship2Height -= time_diff*(ship2Height+0.01);
+			ship2.translate(vec3(0, -time_diff/10, 0));
+			if (ship2Height <= 0) {
+				landingShip2 = false;
+				waitingShip2 = true;
+			}
+		} else if (waitingShip2) {
+			ship2Wait += time_diff;
+			if (ship2Wait >= 3) {
+				ship2Wait = 0;
+				waitingShip2 = false;
+				launchingShip2 = true;
+			}
+		}
+
+		MVP = camera.getMVP(ship2.getMatrix());
+		glUniformMatrix4fv(ObjectMatrixID, 1, GL_FALSE, &MVP[0][0]);
+		ship2.render();
+
+		if (launchingShip3) {
+			ship3Height += time_diff*(ship3Height+0.01);
+			ship3.translate(vec3(0, time_diff/10, 0));
+			if (ship3Height >= 0.06) {
+				launchingShip3 = false;
+				rotatingShip3 = true;
+			}
+		} else if (rotatingShip3) {
+			ship3Angle += time_diff*30;
+			ship3.translate(vec3(0.19900, -(0.05625+ship3Height), -0.009226));
+			ship3.rotate(time_diff*50, vec3(0, 1, 0));
+			ship3.translate(vec3(-0.19900, 0.05625+ship3Height, 0.009226));
+			if (ship3Angle >= 360) {
+				ship3Angle = 0;
+				rotatingShip3 = false;
+				landingShip3 = true;
+			}
+		} else if (landingShip3) {
+			ship3Height -= time_diff*(ship3Height+0.01);
+			ship3.translate(vec3(0, -time_diff/10, 0));
+			if (ship3Height <= 0) {
+				landingShip3 = false;
+				waitingShip3 = true;
+			}
+		} else if (waitingShip3) {
+			ship3Wait += time_diff;
+			if (ship3Wait >= 4) {
+				ship3Wait = 0;
+				waitingShip3 = false;
+				launchingShip3 = true;
+			}
+		}
+
+		MVP = camera.getMVP(ship3.getMatrix());
+		glUniformMatrix4fv(ObjectMatrixID, 1, GL_FALSE, &MVP[0][0]);
+		ship3.render();
+
+		if (launchingShip4) {
+			ship4Height += time_diff*(ship4Height+0.01);
+			ship4.translate(vec3(0, time_diff/10, 0));
+			if (ship4Height >= 0.1) {
+				launchingShip4 = false;
+				rotatingShip4 = true;
+			}
+		} else if (rotatingShip4) {
+			ship4Angle += time_diff*70;
+			ship4.translate(vec3(-0.009226, -(0.07883+ship4Height), 0.17916));
+			ship4.rotate(time_diff*70, vec3(0, 1, 0));
+			ship4.translate(vec3(0.009226, 0.07883+ship4Height, -0.17916));
+			if (ship4Angle >= 1440) {
+				ship4Angle = 0;
+				rotatingShip4 = false;
+				landingShip4 = true;
+			}
+		} else if (landingShip4) {
+			ship4Height -= time_diff*(ship4Height+0.01);
+			ship4.translate(vec3(0, -time_diff/10, 0));
+			if (ship4Height <= 0) {
+				landingShip4 = false;
+				waitingShip4 = true;
+			}
+		} else if (waitingShip4) {
+			ship4Wait += time_diff;
+			if (ship4Wait >= 5) {
+				ship4Wait = 0;
+				waitingShip4 = false;
+				launchingShip4 = true;
+			}
+		}
+
+		MVP = camera.getMVP(ship4.getMatrix());
+		glUniformMatrix4fv(ObjectMatrixID, 1, GL_FALSE, &MVP[0][0]);
+		ship4.render();
 
 		MVP = camera.getMVP(strut1.getMatrix());
 		glUniformMatrix4fv(ObjectMatrixID, 1, GL_FALSE, &MVP[0][0]);

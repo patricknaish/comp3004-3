@@ -36,6 +36,7 @@ class Model {
 		void translate(glm::vec3 translations);
 		void scale(glm::vec3 scales);
 		void render(void);
+		void setMatrix(glm::mat4 newMatrix);
 		glm::mat4 getMatrix(void);
 };
 

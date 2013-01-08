@@ -199,6 +199,10 @@ void Model::render(void) {
 	}
 }
 
+void Model::setMatrix(mat4 newMatrix) {
+	model = newMatrix;
+}
+
 mat4 Model::getMatrix(void) {
 	return model;
 }
